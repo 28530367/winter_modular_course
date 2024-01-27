@@ -66,10 +66,14 @@ def screener_cal_result_gene(request):
         _, result_list = cal_pvalue_main(input_type, cancer, stage, high_percent, low_percent, input_pvalue, cor_method)
         df_pvalue = pd.DataFrame(result_list)
         ############################################################################################
+
         if len(df) == 0:
             df = df_pvalue
         else:
             df = pd.merge(df, df_pvalue, left_on="gene_name", right_on="name", how="inner")
+
+        print(df)
+        
     if switch_dict["miRNA"]:
         selected_miRNA = request.POST.getlist("selected_miRNA[]")
         set_select = request.POST["miRNA_set"]
@@ -114,6 +118,8 @@ def screener_cal_result_gene(request):
     df.fillna(value=False, inplace=True)
     ## df.to_dict('records') this format can fit in datatable
     result_list = df.to_dict('records')
+
+
     return JsonResponse({"result": result_list, "screener_type":switch_str})
 
 ## query database by primary site to construct the condition1 and condition2 select option

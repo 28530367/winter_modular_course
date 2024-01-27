@@ -350,9 +350,77 @@
                     Output
                 </div>
                 <div class="card-body my-4">
+                    <div id="user_input">
+                        <h3>User Input</h3>
+                        <table id="user_input" class="table table-bordered">
+                            <tbody id="user_input_survival_analysis" >
+                                <tr>
+                                    <td>Stage select </td>
+                                    <td id="stage_td"></td>
+                                </tr>
+                                <tr>
+                                    <td>High percentile </td>
+                                    <td id="high_percent_td"></td>
+                                </tr>
+                                <tr>
+                                    <td>Low percentile </td>
+                                    <td id="low_percent_td"></td>
+                                </tr>
+                                <tr>
+                                    <td>correction </td>
+                                    <td id="correction_td"></td>
+                                </tr>
+                                <tr>
+                                    <td>P-value </td>
+                                    <td id="input_pvalue_td"></td>
+                                </tr>
+                            </tbody>
+                            <tbody id="user_input_miRNA_screener" >
+                                <tr>
+                                    <td>Input miRNA</td>
+                                    <td id="selected_miRNA_td"></td>
+                                </tr>
+                                <tr>
+                                    <td>miRNA set </td>
+                                    <td id="miRNA_set_td"></td>
+                                </tr>
+                            </tbody>
+                            <tbody id="user_input_de_screener" >
+                                <tr>
+                                    <td>Condition2</td>
+                                    <td id="condition2_td"></td>
+                                </tr>
+                                <tr>
+                                    <td>Condition1</td>
+                                    <td id="condition1_td"></td>
+                                </tr>
+                                <tr>
+                                    <td>Fold Change of Average FPKM (Condition2 / Condition1)</td>
+                                    <td id="fold_change_td"></td>
+                                </tr>
+                                <tr>
+                                    <td>Test</td>
+                                    <td id="test_td"></td>
+                                </tr>
+                                <tr>
+                                    <td>Direction</td>
+                                    <td id="direction_td"></td>
+                                </tr>
+                                <tr>
+                                    <td>Correction</td>
+                                    <td id="de_correction_td"></td>
+                                </tr>
+                                <tr>
+                                    <td>q-value cutoff</td>
+                                    <td id="q-value_td"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br><br>
                     <div id="output_message" style="font-size: xx-large;"></div><br>
                     <div id = 'output'>
-                        <table id="output_table" class="table table-bordered table-striped result_table" style="width: 100%;"></table>
+                        <table id="output_table" class="table table-bordered " style="width: 100%;"></table>
                     </div>
                 </div>
             </div>

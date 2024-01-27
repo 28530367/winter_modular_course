@@ -72,7 +72,7 @@ $(document).ready(function(){
 							// 指定第一列，從0開始，0表示第一列，1表示第二列……
 							targets: 1,
 							render: function(data, type, row, meta) {
-								return -Math.log10(row['P-value']);
+								return Number(-Math.log10(row['P-value']).toFixed(6)).toExponential(3);
 							},
 						},
                         {

@@ -33,24 +33,11 @@ function construct_prediction_datatable(name, dataTitle, data, sur_cor, high_per
                 render: function(data, type, row, meta) {
                     // console.log(typeof data);
                     if (type === 'display' && typeof data === 'number') {
-                        return Number(data.toFixed(6)).toExponential();
+                        return Number(data.toFixed(6)).toExponential(3);
                     }
                     return data;
                 },
             },
-            // {
-            //     // 指定第一列，從0開始，0表示第一列，1表示第二列……
-            //     targets: target_index + 1 ,
-
-            //     autoWidth: true,
-            //     render: function(data, type, row, meta) {
-            //         // console.log(typeof data);
-            //         if (type === 'display' && typeof data === 'number') {
-            //             return Number(data.toFixed(6)).toExponential();
-            //         }
-            //         return data;
-            //     },
-            // },
             {
                 // 指定第一列，從0開始，0表示第一列，1表示第二列……
                 targets: target_index + 1,
@@ -87,14 +74,15 @@ function construct_prediction_datatable(name, dataTitle, data, sur_cor, high_per
             { title:`q-value`, data: `q-value`},
         );
         columnDefs.push(
-            {
+            {   
                 // 指定第一列，從0開始，0表示第一列，1表示第二列……
-                targets: target_index +3,
+                targets: [target_index, target_index + 1, target_index + 2, target_index + 3],
                 autoWidth: true,
                 render: function(data, type, row, meta) {
+                    // console.log(target_index)
                     // console.log(typeof data);
                     if (type === 'display' && typeof data === 'number') {
-                        return Number(data.toFixed(6)).toExponential();
+                        return Number(data.toFixed(6)).toExponential(3);
                     }
                     return data;
                 },
@@ -296,6 +284,9 @@ $(document).ready(function(){
     });
     $('#search_btn').click(function(){
         $('#output_div').hide()
+        $('#user_input_miRNA_screener').hide()
+        $('#user_input_survival_analysis').hide()
+        $('#user_input_de_screener').hide()
         // get input type
         // var search_type = document.querySelector('input[name="type"]:checked').value;
         // get input cancer
@@ -333,12 +324,12 @@ $(document).ready(function(){
         var DE_filter = [];
         for(var i=0; i<DE_filter_elements.length; i++) {
             DE_filter.push(DE_filter_elements[i].value);
-            console.log(i,DE_filter_elements[i].value);
+            // console.log(i,DE_filter_elements[i].value);
         }
         var DE_info_dict = new Object();
         DE_info_dict.condition1 = document.getElementById("condition1_pre").value.split('|')[0];
         DE_info_dict.condition2 = document.getElementById("condition2_pre").value.split('|')[0];
-        console.log(DE_info_dict.condition1, DE_info_dict.condition2);
+        // console.log(DE_info_dict.condition1, DE_info_dict.condition2);
         // var DE_filter = select_cancer.concat(DE_filter);
 
         var switch_dict = new Object();
@@ -347,6 +338,7 @@ $(document).ready(function(){
         switch_dict.miRNA = miRNA_switch;
         switch_dict.DE = DE_switch;
         var switch_string = JSON.stringify(switch_dict)
+        
         if( survival_switch==false && miRNA_switch==false && DE_switch==false){
             swal('Please open at least 1 screener');
         }
@@ -389,7 +381,7 @@ $(document).ready(function(){
                 success:function(response){
                     swal.close();
                     $('#output_div').show()
-                    console.log(response)
+                    // console.log(response)
                     clearInterval(tID);
                     delete tID
 
@@ -397,21 +389,43 @@ $(document).ready(function(){
                     $('#gap').html('<br><br><br>')
                     // $('#output').html(data);
                     // $('html,body').animate({scrollTop:$('#output').offset().top},800);
-                    console.log(response.result);
+                    // console.log(response.result);
                     construct_prediction_datatable(
                         "output_table", dataTitle, response.result, sur_cor,
                         high_percent, low_percent, stage, 
                         select_cancer[0], switch_dict, selected_miRNA ,DE_info_dict);
+                    $('#stage_td').text(stage);
                     $('#input_type_td').text(dataTitle);
                     $('#primary_site_td').text(select_cancer[0]);
                     $('#high_percent_td').text(high_percent + "%");
                     $('#low_percent_td').text(low_percent + "%");
+                    $('#correction_td').text(sur_cor);
                     $('#input_pvalue_td').text(p_value);
                     $('#output_message').text(`${response.result.length} ${dataTitle} met the input criteria`);
                     $('#screener_type_td').text(response.screener_type);
-                    var resultElement = document.getElementById('result_block');
-                    resultElement.style.display = 'block';
+                    $('#selected_miRNA_td').text(selected_miRNA);
+                    $('#miRNA_set_td').text(miRNA_set);
+                    $('#condition2_td').text(DE_info_dict.condition1);
+                    $('#condition1_td').text(DE_info_dict.condition2);
+                    $('#fold_change_td').text(DE_filter[2] + DE_filter[3]);
+                    $('#test_td').text(DE_filter[4]);
+                    $('#direction_td').text(DE_filter[5]);
+                    $('#de_correction_td').text(DE_filter[6]);
+                    $('#q-value_td').text(DE_filter[7]);
+
+                    console.log(DE_filter)
+                    if(survival_switch == true){
+                        $('#user_input_survival_analysis').show()
+                    }
+
+                    if(miRNA_switch == true){
+                        $('#user_input_miRNA_screener').show()
+                    }
                     
+                    if(DE_switch == true){
+                        $('#user_input_de_screener').show()
+                    }
+
                 },
                 error:function(xhr, ajaxOptions, thrownError){ 
                     alert(thrownError);
@@ -426,51 +440,7 @@ $(document).ready(function(){
             swal('Input Error!')
         }                                                                                                       
     });
-
-    //// enrichment jump btn
-    // $('#btn_cal').on('click', function () {
-    //     var dataTable = $('#output_table').DataTable(); // 假設 DataTable 的 ID 是 'example'
-    //     // var data_seq = dataTable.column('gene_name').data().toArray();
-    //     // var data_seq_str = data_seq.join(',');
-    //     var data_seq_str = dataTable.column('name:name').data();
-    //     var cor_type = $('#c_type').val();
-    //     var p_limit = $('#p-value_enrich').val();
-    //     console.log(data_seq_str, cor_type, p_limit)
-    //     var form = document.createElement('form');
-    //     form.method = 'post';
-    //     // form.action = '/enrichment_app/'; 
-    //     form.action = 'www.google.com'; 
-    //     var input1 = document.createElement('input');
-    //     input1.type = 'hidden';
-    //     input1.name = 'seq';
-    //     input1.value = data_seq_str;
-    //     var input2 = document.createElement('input');
-    //     input2.type = 'hidden';
-    //     input2.name = 'cor_type';
-    //     input2.value = cor_type;
-    //     var input3 = document.createElement('input');
-    //     input3.type = 'hidden';
-    //     input3.name = 'p_limit';
-    //     input3.value = p_limit;
-    //     form.appendChild(input1);
-    //     form.appendChild(input2);
-    //     form.appendChild(input3);
-    //     form.submit();
-    //     //// 使用 XMLHttpRequest 進行 POST 請求
-    //     // var xhr = new XMLHttpRequest();
-    //     // var url = '/enrichment_app/';
-    //     // // 設置 POST 請求
-    //     // xhr.open('POST', url, true);
-    //     // xhr.setRequestHeader('Content-Type', 'application/json');
-    //     // // 將資料以 JSON 字串的形式發送
-    //     // xhr.send(JSON.stringify({ data_seq_str: data_seq_str, cor_type: cor_type, p_limit: p_limit }));
-    //     // // 如果需要在請求完成後執行某些操作，可以添加以下事件監聽器
-    //     // xhr.onload = function () {
-    //     //     console.log('POST request completed');
-    //     // };
-    // });
     
-
     //// switch for every screener
     $('#switch_survival').change(function() {
         if ($(this).prop('checked')) {
@@ -496,37 +466,6 @@ $(document).ready(function(){
             $(".DE_screener").css("display", "none"); 
         }
     });
-    ////
-
-
-    // $('.json-tag-editor.ui-sortable').change(function() {
-    //     setTimeout(function() {
-    //         // alert($('#miRNA_input_area').jsonTagEditor('getTags')[0].tags.length);
-    //         // console.log($('#miRNA_input_area').jsonTagEditor('getTags')[0].tags);
-    //         // alert("change");
-    //         if ($('#miRNA_input_area').jsonTagEditor('getTags')[0].tags.length < 2) {
-    //             $("#set_operation_area").css("display", "none"); 
-    //         } else {
-    //             $("#set_operation_area").css("display", "block");
-    //             if($('#miRNA_input_area').jsonTagEditor('getTags')[0].tags.length != 2){
-    //                 alert('Please input 2 miRNA');
-    //                 // c2_select.find("option[value='" + selectedValueC1 + "']").prop("disabled", true);
-    //                 $("#miRNA_difference").prop("disabled", true);
-    //                 // $("miRNA_difference").prop("disabled", true);
-    //             }
-    //             else{
-    //                 $("#miRNA_difference").prop("disabled", false);
-    //             }
-    //             // if($('#miRNA_input_area').jsonTagEditor('getTags')[0].tags.length == 2){
-    //             //     // $("#set_operation_area").css("display", "none"); 
-    //             //     c1_select.find("option[value='" + selectedValueC2 + "']").prop("disabled", true);
-    //             // }
-    //         }
-    //         console.log("Change event handled, waiting for 1 second.");
-    //     }, 10);
-        
-    // });
-
     
 
     $("#clear").on("click", function () { 
