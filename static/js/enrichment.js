@@ -54,6 +54,7 @@ $(document).ready(function(){
                 clearInterval(tID);
                 delete tID
                 swal.close();
+				$('#enrichment_analysis_user_input').show();
                 data = response.enrichment_result
 				$("#relate_table").DataTable({
 					destroy : true,
@@ -116,6 +117,9 @@ $(document).ready(function(){
 					$("#relate_table").DataTable().column(2).visible(false);
 					$("#relate_table").DataTable().column(3).visible(false);
 				}
+
+				$('#enrichment_correction').text(Correction);
+				$('#enrichment_p-value').text(p_limit);
             },
             error: function(xhr, ajaxOptions, thrownError){
 				alert(thrownError);

@@ -287,6 +287,7 @@ $(document).ready(function(){
         $('#user_input_miRNA_screener').hide()
         $('#user_input_survival_analysis').hide()
         $('#user_input_de_screener').hide()
+        $('#enrichment_analysis_user_input').hide()
         // get input type
         // var search_type = document.querySelector('input[name="type"]:checked').value;
         // get input cancer

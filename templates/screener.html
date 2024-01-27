@@ -350,7 +350,7 @@
                     Output
                 </div>
                 <div class="card-body my-4">
-                    <div id="user_input">
+                    <div>
                         <h3>User Input</h3>
                         <table id="user_input" class="table table-bordered">
                             <tbody id="user_input_survival_analysis" >
@@ -435,6 +435,21 @@
             <br>
             <br>
             <div width=100% align="center">
+                <div id="enrichment_analysis_user_input" style="display: none;">
+                    <h3>User Input</h3>
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <td>Correction type</td>
+                                <td id="enrichment_correction"></td>
+                            </tr>
+                            <tr>
+                                <td>p-value(cut-off)</td>
+                                <td id="enrichment_p-value"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
                 <div class="row" style="width: 80%; margin: 0 auto;">
                     <div class="col-sm-6">
                         <label>Correction type</label>
